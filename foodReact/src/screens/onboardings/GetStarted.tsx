@@ -89,7 +89,7 @@ const GetStarted = () => {
 
             {/* Bottom Section: Footer Action Buttons */}
             <View style={style.footer}>
-              <Pressable style={style.skipBtn}>
+              <Pressable style={style.skipBtn} onPress={() => navigation.replace('BottomTabs')}>
                 <Text style={style.skipBtnText}>Skip</Text>
               </Pressable>
               <Pressable onPress={() => handleNext(currentIndex)} style={style.nextBtn}>
