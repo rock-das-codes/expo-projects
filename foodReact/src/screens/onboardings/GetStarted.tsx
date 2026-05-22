@@ -3,7 +3,7 @@ import React from 'react';
 import {useRef} from 'react';
 import { Dimensions, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import {useNavigation} from '@react-navigation/native';
 // Updated data matching the content and yellow/black theme of the reference image
 export const ONBOARDING_DATA = [
   {
@@ -35,14 +35,16 @@ export const ONBOARDING_DATA = [
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const GetStarted = () => {
-    const flatListRef = useRef(null);
+    const navigation = useNavigation();
+    const flatListRef = useRef<any>(null);
     const [currentIndex, setCurrentIndex] = React.useState(0);
-    const handleNext = (index) => {
+    const handleNext = (index: number) => {
         if( index< ONBOARDING_DATA.length - 1) {
             flatListRef.current.scrollToIndex({ index: index + 1, animated: true });
             setCurrentIndex(index + 1);
         } else {
             // Handle "Get Started" action, e.g., navigate to home screen
+            navigation.replace('BottomTabs'); // Assuming you have a 'Home' screen in your navigation stack
         }
     }
     const onMomentumScrollEnd = (event: any) => {
