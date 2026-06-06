@@ -66,4 +66,17 @@ npx expo start
 *Note: Sensor APIs (Accelerometer/Gyroscope) will not produce real data on desktop emulators. For the best experience, run the app on a physical device.*
 
 ## 📸 Screenshots
-*(Add screenshots of the Dashboard, Active Drive, and Activity screens here)*
+<img width="1080" height="2460" alt="Screenshot_20260606-224202" src="https://github.com/user-attachments/assets/b79428d1-92c2-4091-b9f5-c43dd94c6a1a" />
+<img width="1080" height="2460" alt="Screenshot_20260606-224121" src="https://github.com/user-attachments/assets/37f0be30-b994-418b-ac1a-b1a02b256245" />
+<img width="1080" height="2460" alt="Screenshot_20260606-224129" src="https://github.com/user-attachments/assets/c3e94813-2a51-4c2c-aefc-bfff0bd90e8c" />
+<img width="1080" height="2460" alt="Screenshot_20260606-224136" src="https://github.com/user-attachments/assets/c23b78dd-39df-40f3-9022-48e3f6f6e6d2" />
+<img width="1080" height="2460" alt="Screenshot_20260606-224139" src="https://github.com/user-attachments/assets/c529dc9a-824b-4f50-b487-118a69e30c4d" />
+
+
+<img width="1080" height="2460" alt="Screenshot_20260606-224114" src="https://github.com/user-attachments/assets/84f46724-7533-45c2-91f5-4e4e8c6175d0" />
+
+
+https://drive.google.com/file/d/1vBSsBKNL9g609dIjDEqqcv-KqN1NWZ1A/view?usp=sharing
+https://drive.google.com/file/d/18M2VBLwBQOwBBzvj_M1a764hneRF2rgM/view?usp=sharing
+
+
