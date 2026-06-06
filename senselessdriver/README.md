@@ -1,56 +1,69 @@
-# Welcome to your Expo app 👋
+# DriveSense AI
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+DriveSense AI is a React Native mobile application built with Expo that evaluates driving behavior in real-time. By utilizing the device's built-in sensors (Accelerometer, Gyroscope, and DeviceMotion), the app acts as an intelligent dashcam and co-pilot, detecting risky driving patterns without requiring external OBD-II hardware.
 
-## Get started
+## 🚀 Tech Stack Used
 
-1. Install dependencies
+- **Framework:** React Native & Expo
+- **Routing:** Expo Router (File-based navigation)
+- **Local Storage:** Expo SQLite (synchronous persistence)
+- **Sensors API:** `expo-sensors` (Accelerometer, Gyroscope, DeviceMotion)
+- **Styling:** Custom StyleSheet / Global CSS with modern dark UI
+- **Icons & Graphics:** Expo Vector Icons (`@expo/vector-icons`), `react-native-svg`
 
-   ```bash
-   npm install
-   ```
+## 📡 Sensors Used
 
-2. Start the app
+The application relies entirely on on-device telemetry data to analyze driving:
+1. **Accelerometer:** Detects linear G-forces to identify harsh acceleration and sharp braking.
+2. **Gyroscope:** Detects rotational velocity (radians per second) to identify sharp or aggressive turning.
+3. **DeviceMotion:** Tracks overall device movement magnitude to identify phone handling and distracted driving.
 
-   ```bash
-   npx expo start
-   ```
+## 🧠 Event Detection Strategy & Assumptions
 
-In the output, you'll find options to open the app in a
+Since the app cannot guarantee the phone's orientation (it could be mounted on the dashboard, lying flat in the cup holder, or placed in a pocket), the detection strategy relies heavily on **vector magnitudes** rather than single-axis tracking. 
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Magnitude Heuristics:** We calculate the root mean square (RMS) of the `x, y, z` axes. Earth's gravity naturally applies `1.0G`. Any significant spike above `1.0` combined with directional biases helps us classify the event.
+- **Filtering:** Raw sensor updates are fired rapidly. The app implements debouncing (cooldown periods) after an event is registered so that a single harsh brake isn't logged 50 times in two seconds.
+- **GPS Limitation:** Real speed and exact mapping are mocked/extrapolated in this version since background location tracking is not actively polling.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## ⚙️ Threshold Values Chosen
 
-## Get a fresh project
+Based on real-world vehicle physics, the following thresholds were mathematically tuned:
 
-When you're ready, run:
+- **Harsh Acceleration & Braking (1.35G):** A resting phone registers `1.0G`. A typical passenger vehicle pulling a harsh brake or acceleration generates an extra `0.35G - 0.5G`. `1.35G` was chosen as the optimal threshold to filter out normal bumps but catch aggressive stops.
+- **Sharp Turning (0.55 rad/s):** The gyroscope measures radians/second. A standard sharp corner is taken around `0.5 rad/s`. Values exceeding `0.55 rad/s` are flagged as aggressive steering.
+- **Phone Distraction (1.2G):** The DeviceMotion sensor tracks phone pick-ups. A threshold of `1.2G` is low enough to ignore standard car vibrations but sensitive enough to catch someone lifting the phone to text.
 
+## 📊 Driving Score Calculation Logic
+
+Every new trip begins with a perfect **100 Safety Score**. 
+As unsafe events occur during the drive, penalties are dynamically applied:
+
+- **Harsh Acceleration:** `-5 points`
+- **Harsh Braking:** `-5 points`
+- **Aggressive/Sharp Turn:** `-5 points`
+- **Phone Distraction / Handling:** `-10 points` (Heavily penalized)
+
+The minimum score is `0`. The user's lifetime performance is aggregated in the dashboard using a historical average of all trips.
+
+## 🛠 How to run locally
+
+### 1. Install Dependencies
+Make sure you have Node.js installed. Clone the repository and run:
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Start the Expo Server
+```bash
+npx expo start
+```
 
-### Other setup steps
+### 3. Run on a Device
+- **Physical Device:** Download the **Expo Go** app on your iOS or Android device and scan the QR code presented in your terminal.
+- **Emulator:** Press `a` in the terminal to open in Android Studio Emulator, or `i` to open in iOS Simulator.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+*Note: Sensor APIs (Accelerometer/Gyroscope) will not produce real data on desktop emulators. For the best experience, run the app on a physical device.*
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📸 Screenshots
+*(Add screenshots of the Dashboard, Active Drive, and Activity screens here)*
